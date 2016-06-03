@@ -1,0 +1,74 @@
+Concurrency in Go and Erlang
+28 Aug 2016
+Tags: erlang, golang, csp, actors, concurrency
+
+Peter Lemenkov
+Software Engineer, Red Hat
+lemenkov@gmail.com
+https://github.com/lemenkov
+
+* Previously discussed
+
+- [[https://github.com/w-vi/talks/tree/master/go-meetup-brno-2016-06-16][Channel is Mutex in disguise / Go channels internals]]
+
+* Introduction
+
+.image img/multithreading_ipc.png _ 700
+
+* Uncertainty principle
+
+.image img/uncertainty_principle.png _ 300
+
+- Position and speed
+- Value and Fourier transform
+- When a measure becomes a target, it ceases to be a good measure (Goodhart's Law)
+- Measure voltage and current
+- Optimize for CPU and optimize for memory
+
+* Types of concurrency models
+
+- [[https://en.wikipedia.org/wiki/Actor_model][Actor model]]
+- [[https://en.wikipedia.org/wiki/Communicating_sequential_processes][Communicating sequential processes]]
+
+* Examples / implementations
+
+- Actor model
+
+0. E-mail
+1. Erlang
+2. [[https://en.wikipedia.org/wiki/Unix_signal][Software apps communicating via signals]]
+
+-  CSP
+
+0. Go
+1. [[https://github.com/crystal-lang/crystal][Crystal]]
+2. [[https://en.wikipedia.org/wiki/Pipeline_(Unix)][Software apps communicating via pipes]]
+
+* Differences
+
+- Actor model relies on treads / processes
+- Actor is asynchronous
+- Actor is "memory-oriented"
+
+- CSP relies on channels
+- CSP is "syncronous"
+- CSP is "CPU oriented"
+
+* Actor model practical shortcomings and benefits
+
+- Relies on an external supervisor. Very likely a complicated one.
+- Suitable for RT and near-RT systems
+- Hard to add native OS calls (see [[https://gist.github.com/chewbranca/07d9a6eed3da7b490b47]["Scheduler Collapse" in Erlang]]).
+- Easily to kill offending process - you have full control over the threads
+
+* CSP model practical shortcomings and benefits
+
+- Almost self-syncronizing (relatively simple scheduler)
+- Easy to add FFI / native OS calls
+- Gogoutines are anonymous so one cannot kill a goroutine (even if it blocks os.Read)
+- [[http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.100.6671&rep=rep1&type=pdf][Well-developed theory]]
+
+* Conclusion
+
+- Go and Erlang are different and complementary
+- Use proper tooling
